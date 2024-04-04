@@ -33,7 +33,7 @@ def opt_sequential(model, dataloader, dev):
     use_cache = model.config.use_cache
     model.config.use_cache = False
     layers = model.model.decoder.layers
-
+    print(layers)
     model.model.decoder.embed_tokens = model.model.decoder.embed_tokens.to(dev) 
     model.model.decoder.embed_positions = model.model.decoder.embed_positions.to(dev)
     if hasattr(model.model.decoder, 'project_out') and model.model.decoder.project_out:
@@ -46,6 +46,7 @@ def opt_sequential(model, dataloader, dev):
     inps = torch.zeros(
         (args.nsamples, model.seqlen, model.config.hidden_size), dtype=dtype, device=dev
     )
+    print(inps.shape)
     cache = {'i': 0, 'attention_mask': None}
 
     class Catcher(nn.Module):
@@ -89,6 +90,7 @@ def opt_sequential(model, dataloader, dev):
             if (not (args.minlayer <= i < args.maxlayer and args.prune_only in name)) == (not args.invert):
               continue
             gpts[name] = SparseGPT(subset[name])
+            print(name, subset[name])
             if args.wbits < 16:
                 gpts[name].quantizer = Quantizer()
                 gpts[name].quantizer.configure(
@@ -98,6 +100,7 @@ def opt_sequential(model, dataloader, dev):
         def add_batch(name):
             def tmp(_, inp, out):
                 gpts[name].add_batch(inp[0].data, out.data)
+
             return tmp
         handles = []
         for name in gpts:
@@ -329,7 +332,7 @@ if __name__ == '__main__':
                 break
         print(time.time() - tick)
 
-    for dataset in ['ptb', 'c4']:
+    for dataset in ['c4']:
         dataloader, testloader = get_loaders(
             dataset, seed=args.seed, model=args.model, seqlen=model.seqlen
         )
