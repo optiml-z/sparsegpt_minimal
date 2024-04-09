@@ -47,42 +47,6 @@ vae.to(torch_device)
 text_encoder.to(torch_device)
 unet.to(torch_device);
 
-# prompt = ["a photograph of an astronaut riding a horse"]
-# prompt = [
-#     "A futuristic cityscape at dusk, illuminated by neon lights and flying cars, in the style of cyberpunk.",
-#     "A serene mountain landscape with a crystal-clear lake in the foreground, during the golden hour.",
-#     "A bustling medieval marketplace, full of vibrant colors and characters, with a castle in the background.",
-#     "An underwater scene showing a coral reef teeming with life, including a variety of fish and a sunken ship.",
-#     "A surreal landscape where the sky is made of swirling galaxies and the ground is a checkerboard of grass and clouds.",
-#     "A portrait of a Victorian lady, detailed lace dress and an intricate hairstyle, holding a mysterious locket.",
-#     "A close-up of a dragon's eye, reflecting a knight preparing for battle, with scales shimmering in the sunlight.",
-#     "An abandoned amusement park overtaken by nature, with a vintage carousel in the foreground.",
-#     "A whimsical forest inhabited by fantastical creatures, with a glowing path leading to an ancient tree.",
-#     "A dystopian cityscape showing the contrast between a wealthy district and a rundown area, in a high-tech future.",
-#     "A traditional Japanese garden in spring, with cherry blossoms in full bloom and a tranquil koi pond.",
-#     "An art deco style poster advertising a luxurious 1920s ocean liner, with elegant fonts and geometric shapes.",
-#     "A steampunk workshop filled with intricate machinery, gears, and a work-in-progress invention.",
-#     "A snowy landscape at night lit by the aurora borealis, with a cozy wooden cabin and a smoking chimney.",
-#     "A detailed map of a fantasy world, featuring diverse terrains, kingdoms, and mythical landmarks.",
-#     "A space station orbiting an alien planet, with spaceships docking and astronauts performing a spacewalk.",
-#     "A Renaissance-era banquet scene, with sumptuously dressed figures, an opulent table setting, and a grand hall.",
-#     "A post-apocalyptic city with nature reclaiming the ruins, and a group of survivors exploring.",
-#     "A magical library with floating books, ancient tomes, and a glowing portal to another dimension.",
-#     "A scene from ancient Egypt, showing the construction of the pyramids with workers and Pharaoh overseeing.",
-#     "A high-speed chase scene through a futuristic metropolis, with advanced vehicles and neon lights.",
-#     "A cozy autumn scene in a small village, with leaves falling, a pumpkin patch, and a warm bakery.",
-#     "An explorer discovering an ancient ruin in a jungle, with hidden traps and treasures.",
-#     "A deep space scene showing a nebula, distant stars, and a solitary spaceship on an exploration mission.",
-#     "A magical girl transformation scene, with dynamic poses, sparkling effects, and a cute mascot.",
-#     "A noir-style detective scene, with a shadowy figure, a vintage office, and a case waiting to be solved.",
-#     "A Viking longship sailing through a stormy sea, with lightning illuminating the fearsome warriors.",
-#     "A cybernetic samurai showdown in a neon-lit Tokyo alley, with futuristic armor and weapons.",
-#     "A peaceful Zen garden with smooth stones, raked sand patterns, and a small bamboo fountain.",
-#     "An epic battle scene from a fantasy novel, with dragons, wizards, and warriors clashing.",
-#     "A vintage circus poster featuring an exotic animal act, with bold typography and classic illustrations.",
-#     "A mystical encounter in an enchanted forest, with a unicorn and a fairy under a full moon."
-# ]
-
 height = 512  # default height of Stable Diffusion
 width = 512  # default width of Stable Diffusion
 num_inference_steps = 25  # Number of denoising steps
@@ -110,6 +74,7 @@ latents = torch.randn(
 )
 
 torch.cuda.memory_summary()
+
 
 latents = latents * scheduler.init_noise_sigma
 
