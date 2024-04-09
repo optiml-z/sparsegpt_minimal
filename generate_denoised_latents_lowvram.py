@@ -54,25 +54,26 @@ guidance_scale = 7.5  # Scale for classifier-free guidance
 generator = torch.Generator(device = torch_device).manual_seed(0) # Seed generator to create the initial latent noise
 batch_size = 1
 num_samples = 4
-text_input = tokenizer(
-    prompt[:batch_size], padding="max_length", max_length=tokenizer.model_max_length, truncation=True, return_tensors="pt"
-)
 
-with torch.no_grad():
-    text_embeddings = text_encoder(text_input.input_ids.to(torch_device))[0]
-    
-max_length = text_input.input_ids.shape[-1]
-uncond_input = tokenizer([""] * batch_size, padding="max_length", max_length=max_length, return_tensors="pt")
-uncond_embeddings = text_encoder(uncond_input.input_ids.to(torch_device))[0]
-
-text_embeddings = torch.cat([uncond_embeddings, text_embeddings])
 
 
 
 from tqdm.auto import tqdm
 
 for i, batch in enumerate(range(0, num_samples, 1)):
-    
+    print(prompt[batch])
+    text_input = tokenizer(
+    prompt[batch], padding="max_length", max_length=tokenizer.model_max_length, truncation=True, return_tensors="pt"
+    )
+
+    with torch.no_grad():
+        text_embeddings = text_encoder(text_input.input_ids.to(torch_device))[0]
+        
+    max_length = text_input.input_ids.shape[-1]
+    uncond_input = tokenizer([""] * batch_size, padding="max_length", max_length=max_length, return_tensors="pt")
+    uncond_embeddings = text_encoder(uncond_input.input_ids.to(torch_device))[0]
+
+    text_embeddings = torch.cat([uncond_embeddings, text_embeddings])
     scheduler.set_timesteps(num_inference_steps)
     
     latents = torch.randn(
