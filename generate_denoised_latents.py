@@ -52,7 +52,7 @@ width = 512  # default width of Stable Diffusion
 num_inference_steps = 25  # Number of denoising steps
 guidance_scale = 7.5  # Scale for classifier-free guidance
 generator = torch.Generator(device = torch_device).manual_seed(0) # Seed generator to create the initial latent noise
-batch_size = len(prompt)
+batch_size = len(prompt); print(f"batch_size: {batch_size}")
 
 text_input = tokenizer(
     prompt, padding="max_length", max_length=tokenizer.model_max_length, truncation=True, return_tensors="pt"
@@ -73,7 +73,7 @@ latents = torch.randn(
     device=torch_device,
 )
 
-torch.cuda.memory_summary()
+print(torch.cuda.memory_summary())
 
 
 latents = latents * scheduler.init_noise_sigma
@@ -105,7 +105,7 @@ latents = 1 / 0.18215 * latents
 torch.save(latents, 'latents.pt')
 del latents
 torch.cuda.empty_cache()
-torch.cuda.memory_summary()
+print(torch.cuda.memory_summary())
 # with torch.no_grad():
 #     image = vae.decode(latents).sample
     
