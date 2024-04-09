@@ -135,3 +135,13 @@ for t in tqdm(scheduler.timesteps):
 # scale and decode the image latents with vae
 latents = 1 / 0.18215 * latents
 torch.save(latents, 'latents.pt')
+
+# with torch.no_grad():
+#     image = vae.decode(latents).sample
+    
+# def img2cpu(image): 
+#     image = (image / 2 + 0.5).clamp(0, 1).squeeze() 
+#     image = (image.permute(1, 2, 0) * 255).to(torch.uint8).cpu().numpy()
+#     return image
+# image_cpu = Image.fromarray(img2cpu(image))
+# image_cpu.save('image.png')    
