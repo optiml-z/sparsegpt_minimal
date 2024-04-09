@@ -109,6 +109,8 @@ latents = torch.randn(
     device=torch_device,
 )
 
+torch.cuda.memory_summary()
+
 latents = latents * scheduler.init_noise_sigma
 
 from tqdm.auto import tqdm
@@ -134,8 +136,11 @@ for t in tqdm(scheduler.timesteps):
     
 # scale and decode the image latents with vae
 latents = 1 / 0.18215 * latents
-torch.save(latents, 'latents.pt')
 
+torch.save(latents, 'latents.pt')
+del latents
+torch.cuda.empty_cache()
+torch.cuda.memory_summary()
 # with torch.no_grad():
 #     image = vae.decode(latents).sample
     
