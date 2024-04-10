@@ -34,13 +34,13 @@ DEBUG = False
 
 @dataclass
 class Args(object):
-    nsamples: int = 4
+    nsamples: int = 1
     sparsity = 0.3
     prunen: int = 0
     prunem: int = 0
     percdamp = .01
     blocksize: int = 4
-    batch_size: int = 32
+    batch_size: int = 1
     num_layers: int = 5
     input_size: int = 784
     output_size: int = 10
@@ -94,7 +94,7 @@ class SparseGPT:
         self.H = torch.zeros((self.columns, self.columns), device=self.dev)
         self.nsamples = 0
 
-    def add_batch(self, inp, out, blocksize=1024):
+    def add_batch(self, inp, out, blocksize=args.blocksize):
         if DEBUG:
             self.inp1 = inp
             self.out1 = out
@@ -217,7 +217,7 @@ class SparseGPT:
 
 # %%
 @torch.no_grad()
-def vae_sequential(model, dataloader, dev):
+def prune_decoder(model, dataloader, dev):
     print('Starting ...')
 
     # use_cache = model.config.use_cache
@@ -225,9 +225,9 @@ def vae_sequential(model, dataloader, dev):
     
     layers = list(model.modules())[0]
     
-    print(layers)
+    # print(layers)
     layers = layers.to(dev)
-    layers_dict = find_layers(layers); print(layers_dict)
+    layers_dict = find_layers(layers); #print(layers_dict)
     dtype = next(iter(model.parameters())).dtype
     inps = torch.zeros(
         (args.batch_size, 4, 64, 64), dtype=dtype, device=dev
@@ -235,6 +235,7 @@ def vae_sequential(model, dataloader, dev):
 
     for batch in dataloader:
         try:
+            print(batch[0])
             model(batch[0].to(dev))
         except ValueError as e:
             print(e)
@@ -257,9 +258,10 @@ def vae_sequential(model, dataloader, dev):
         # gpts = {}
         # for name in subset:
         gpts[layer_name] = SparseGPT(layer_obj)
-        print("layer_obj ", layer_obj)
+        # print("layer_obj ", layer_obj)
         def add_batch(layer_name):
             def tmp(_, inp, out):
+                print(inp[0])
                 gpts[layer_name].add_batch(inp[0].data, out.data)
             return tmp
         handles = []
@@ -289,3 +291,12 @@ def vae_sequential(model, dataloader, dev):
         torch.cuda.empty_cache()
 
         inps, outs = outs, inps
+
+
+# %%
+prune_decoder(vae.decoder, calibration_loader, device)
+# %%
+layers = list(vae.decoder.modules())[0]
+# %%
+len(list(layers.modules()))
+# %%
