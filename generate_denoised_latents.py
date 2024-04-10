@@ -23,6 +23,9 @@ parser = argparse.ArgumentParser(description='Generate denoised latents')
 parser.add_argument('--num_samples', type=int, default='512')
 args = parser.parse_args()
 
+if not os.path.exists('data'):
+    os.makedirs('data')
+
 DEBUG = False 
 DATA_PATH = "data"
 
@@ -121,3 +124,4 @@ print(torch.cuda.memory_summary())
 #     return image
 # image_cpu = Image.fromarray(img2cpu(image))
 # image_cpu.save('image.png')    
+
