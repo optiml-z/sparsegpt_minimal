@@ -16,9 +16,10 @@ from torch.utils.data import DataLoader
 from dataclasses import dataclass
 from torch.utils.data import SubsetRandomSampler
 from prompts import prompt
-
+import os
 
 DEBUG = False 
+DATA_PATH = "data"
 
 torch.backends.cuda.matmul.allow_tf32 = False
 torch.backends.cudnn.allow_tf32 = False
@@ -102,7 +103,7 @@ for t in tqdm(scheduler.timesteps):
 # scale and decode the image latents with vae
 latents = 1 / 0.18215 * latents
 
-torch.save(latents, 'latents.pt')
+torch.save(latents, os.path.join(DATA_PATH, 'latents.pt'))
 del latents
 torch.cuda.empty_cache()
 print(torch.cuda.memory_summary())
