@@ -9,12 +9,14 @@ class LatentsDataset(Dataset):
         
         self.data_path = data_path
         self.prompts = prompts
+
     def __len__(self):
         return len(self.prompts)
 
     def __getitem__(self, idx):
 
-        img_tensor_path = os.path.join(self.data_path, f"latents_{idx}.pt")
+        img_tensor_path = os.path.join(self.data_path, f"latent_{idx}.pt")
+        print(img_tensor_path)
         img_tensor = torch.load(img_tensor_path)
         return img_tensor
     
