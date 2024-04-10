@@ -40,7 +40,7 @@ class Args(object):
     prunem: int = 0
     percdamp = .01
     blocksize: int = 4
-    batch_size: int = 1
+    batch_size: int = 4
     num_layers: int = 5
     input_size: int = 784
     output_size: int = 10
@@ -68,7 +68,7 @@ calibration_loader = DataLoader(calibration_set, batch_size=args.batch_size, shu
 
 
 # %%
-calibration_set[1]
+calibration_set[1].shape
 # %%
 from PIL import Image
 import torch
@@ -235,7 +235,7 @@ def prune_decoder(model, dataloader, dev):
 
     for batch in dataloader:
         try:
-            print(batch[0])
+            #print(batch[0])
             model(batch[0].to(dev))
         except ValueError as e:
             print(e)
