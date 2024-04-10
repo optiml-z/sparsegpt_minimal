@@ -53,7 +53,7 @@ num_inference_steps = 25  # Number of denoising steps
 guidance_scale = 7.5  # Scale for classifier-free guidance
 generator = torch.Generator(device = torch_device).manual_seed(0) # Seed generator to create the initial latent noise
 batch_size = 1
-num_samples = 256
+num_samples = 1024
 
 
 
@@ -84,7 +84,7 @@ for i, batch in enumerate(range(0, num_samples, 1)):
         device=torch_device,
     )
 
-    print(torch.cuda.memory_summary())
+    # print(torch.cuda.memory_summary())
 
 
     latents = latents * scheduler.init_noise_sigma    
@@ -112,7 +112,8 @@ for i, batch in enumerate(range(0, num_samples, 1)):
     torch.save(latents, os.path.join(DATA_PATH, f'latent_{batch}.pt'))
     del latents
     torch.cuda.empty_cache()
-    print(torch.cuda.memory_summary())
+    # print(torch.cuda.memory_summary())
+    print(i)
 # with torch.no_grad():
 #     image = vae.decode(latents).sample
     
