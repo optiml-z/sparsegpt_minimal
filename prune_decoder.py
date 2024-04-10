@@ -100,6 +100,9 @@ class SparseGPT:
             self.out1 = out
         if len(inp.shape) == 2:
             inp = inp.unsqueeze(0)
+        if len(inp.shape) == 4:
+            inp = inp.squeeze(0)            
+            print(inp.shape)
         tmp = inp.shape[0]
         if isinstance(self.layer, nn.Linear) or isinstance(self.layer, transformers.Conv1D):
             if len(inp.shape) == 3:
@@ -261,7 +264,7 @@ def prune_decoder(model, dataloader, dev):
         # print("layer_obj ", layer_obj)
         def add_batch(layer_name):
             def tmp(_, inp, out):
-                print(inp[0])
+                print(inp[0].shape)
                 gpts[layer_name].add_batch(inp[0].data, out.data)
             return tmp
         handles = []
@@ -270,6 +273,7 @@ def prune_decoder(model, dataloader, dev):
         for j in range(args.batch_size):
             # outs[j] = layer(inps[j].unsqueeze(0), attention_mask=attention_mask)[0]
             outs[j] = layer(inps[j].unsqueeze(0))[0]
+            print(outs[j].shape)
         for h in handles:
             h.remove()
 
@@ -285,7 +289,7 @@ def prune_decoder(model, dataloader, dev):
         for j in range(args.batch_size):
             # outs[j] = layer(inps[j].unsqueeze(0), attention_mask=attention_mask)[0]
             outs[j] = layer(inps[j].unsqueeze(0))[0]
-
+            print(outs[j].shape)
         layer = layer.cpu()
         del layer
         torch.cuda.empty_cache()
