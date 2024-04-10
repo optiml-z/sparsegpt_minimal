@@ -20,9 +20,22 @@ from dataclasses import dataclass
 from torch.utils.data import SubsetRandomSampler
 from PIL import Image
 from diffusers import AutoencoderKL
+from dataloader import LatentsDataset
+from prompts import prompt
+import os
+#%%
 
+
+data_path = ".\data"
 device = "cuda"
-latents = torch.load("latents.pt").to(device)
+#%%
+dataset = LatentsDataset(data_path, prompt)
+
+#%%
+dataloader = DataLoader(dataset, batch_size=1, shuffle=True, num_workers=2)
+#%%
+dataloader
+#%%
 vae = AutoencoderKL.from_pretrained("runwayml/stable-diffusion-v1-5", subfolder="vae", use_safetensors=True).to(device)
 #%%
 
@@ -31,12 +44,14 @@ def img2cpu(image):
     image = (image.permute(1, 2, 0) * 255).to(torch.uint8).cpu().numpy()
     return image
 
+if not os.path.exists('images'):
+    os.makedirs('images')
 
 with torch.no_grad():
-    for i in range(len(latents)):
-        image = vae.decode(latents).sample
+    for i in range(len(dataset)):
+        image = vae.decode(dataset[i]).sample
         image_cpu = Image.fromarray(img2cpu(image))
-        image_cpu.save(f'image_{i:04d}.png')
+        image_cpu.save(os.path.join("images", f'image_{i}.png'))
    
 
 # Start defining a dataloader for the dataset
