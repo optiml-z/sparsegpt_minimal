@@ -52,16 +52,16 @@ torch_device = "cuda"
 vae.to(torch_device)
 text_encoder.to(torch_device)
 unet.to(torch_device);
-
+prompts = prompt[:args.num_samples]
 height = 512  # default height of Stable Diffusion
 width = 512  # default width of Stable Diffusion
 num_inference_steps = 25  # Number of denoising steps
 guidance_scale = 7.5  # Scale for classifier-free guidance
 generator = torch.Generator(device = torch_device).manual_seed(0) # Seed generator to create the initial latent noise
-batch_size = len(prompt[:args.num_samples]); print(f"batch_size: {batch_size}")
+batch_size = len(prompts); print(f"batch_size: {batch_size}")
 
 text_input = tokenizer(
-    prompt, padding="max_length", max_length=tokenizer.model_max_length, truncation=True, return_tensors="pt"
+    prompts, padding="max_length", max_length=tokenizer.model_max_length, truncation=True, return_tensors="pt"
 )
 
 with torch.no_grad():
