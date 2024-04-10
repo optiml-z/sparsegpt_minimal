@@ -53,7 +53,7 @@ num_inference_steps = 25  # Number of denoising steps
 guidance_scale = 7.5  # Scale for classifier-free guidance
 generator = torch.Generator(device = torch_device).manual_seed(0) # Seed generator to create the initial latent noise
 batch_size = 1
-num_samples = 8
+num_samples = 256
 
 
 
