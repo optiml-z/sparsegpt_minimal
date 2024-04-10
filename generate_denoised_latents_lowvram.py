@@ -17,6 +17,11 @@ from dataclasses import dataclass
 from torch.utils.data import SubsetRandomSampler
 from prompts import prompt
 import os
+import argparse
+
+parser = argparse.ArgumentParser(description='Generate denoised latents')
+parser.add_argument('--num_samples', type=int, default='512')
+args = parser.parse_args()
 
 DEBUG = False 
 DATA_PATH = "data"
@@ -53,7 +58,7 @@ num_inference_steps = 25  # Number of denoising steps
 guidance_scale = 7.5  # Scale for classifier-free guidance
 generator = torch.Generator(device = torch_device).manual_seed(0) # Seed generator to create the initial latent noise
 batch_size = 1
-num_samples = 1024
+num_samples = args.num_samples
 
 
 
