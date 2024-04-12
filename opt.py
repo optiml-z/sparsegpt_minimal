@@ -33,13 +33,14 @@ def opt_sequential(model, dataloader, dev):
     use_cache = model.config.use_cache
     model.config.use_cache = False
     layers = model.model.decoder.layers
-    print(layers)
+    print("layers: ", layers)
     model.model.decoder.embed_tokens = model.model.decoder.embed_tokens.to(dev) 
     model.model.decoder.embed_positions = model.model.decoder.embed_positions.to(dev)
     if hasattr(model.model.decoder, 'project_out') and model.model.decoder.project_out:
         model.model.decoder.project_out = model.model.decoder.project_out.to(dev) 
     if hasattr(model.model.decoder, 'project_in') and model.model.decoder.project_in:
         model.model.decoder.project_in = model.model.decoder.project_in.to(dev) 
+    print("layers[0]: ", layers[0])
     layers[0] = layers[0].to(dev)
 
     dtype = next(iter(model.parameters())).dtype
@@ -59,13 +60,14 @@ def opt_sequential(model, dataloader, dev):
             cache['attention_mask'] = kwargs['attention_mask']
             raise ValueError
     layers[0] = Catcher(layers[0])
+    print("Catcher(layers[0]): ", layers[0])
     for batch in dataloader:
         try:
             model(batch[0].to(dev))
         except ValueError:
             pass
     layers[0] = layers[0].module
-
+    print("layers[0].module: ", layers[0])
     layers[0] = layers[0].cpu()
     model.model.decoder.embed_tokens = model.model.decoder.embed_tokens.cpu()
     model.model.decoder.embed_positions = model.model.decoder.embed_positions.cpu()
@@ -82,7 +84,7 @@ def opt_sequential(model, dataloader, dev):
 
     for i in range(len(layers)):
         layer = layers[i].to(dev)
-
+        print(f"layer[{i}]: ", layer)
         subset = find_layers(layer)
         
         gpts = {}
