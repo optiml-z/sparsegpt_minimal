@@ -56,7 +56,10 @@ def opt_sequential(model, dataloader, dev):
             self.module = module
         def forward(self, inp, **kwargs):
             inps[cache['i']] = inp
+            print(f"cache['i']: {cache['i']}")
+            print(f"inps[cache['i']]: {inps[cache['i']]}")
             cache['i'] += 1
+
             cache['attention_mask'] = kwargs['attention_mask']
             raise ValueError
     layers[0] = Catcher(layers[0])
