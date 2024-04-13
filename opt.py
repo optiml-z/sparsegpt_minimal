@@ -42,7 +42,7 @@ def opt_sequential(model, dataloader, dev):
         model.model.decoder.project_in = model.model.decoder.project_in.to(dev) 
     print("layers[0]: ", layers[0])
     layers[0] = layers[0].to(dev)
-
+    print("model.seqlen: ", model.seqlen)
     dtype = next(iter(model.parameters())).dtype
     inps = torch.zeros(
         (args.nsamples, model.seqlen, model.config.hidden_size), dtype=dtype, device=dev
