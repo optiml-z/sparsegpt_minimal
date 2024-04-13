@@ -63,6 +63,7 @@ def opt_sequential(model, dataloader, dev):
     print("Catcher(layers[0]): ", layers[0])
     for batch in dataloader:
         try:
+            print(batch[0])
             model(batch[0].to(dev))
         except ValueError:
             pass
